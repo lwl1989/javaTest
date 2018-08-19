@@ -70,4 +70,15 @@ public class Exercises {
             }
         }
     }
+
+    public static int[] histogram(int[] a,int M)
+    {
+        int[] h = new int[M];
+        int N = a.length;
+        for(int i=0;i<N;i++)
+        {
+            h[a[i]]++;
+        }
+        return h;
+    }
 }
