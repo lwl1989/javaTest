@@ -10,7 +10,7 @@ public class Sys implements SysInterface{
 
     @Override
     public Integer test1() {
-        return new Integer(3);
+        return Integer.valueOf(3);
     }
     //忽略过期警告   接口内指定了 @Deprecated     Deprecation
     @SuppressWarnings("deprecation")
