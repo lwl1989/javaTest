@@ -24,44 +24,73 @@ package Self;
  *       度是深度的反转  假如深度为n 度为0的则是叶子节点 度为n-1的则是根节点
  */
 public class Heap {
+
     public static void main(String[] args) {
         int[] arr = {22,3,112,56,23,12,45,78,97,24,35};
 
-        buildMaxHeap(arr);
+        buildMinHead(arr);
         //int[] arr2 = buildMinHead(arr);
 
-        for(int v : arr) {
-            System.out.println(v);
-        }
-        System.out.println();
-        int[] arr1 = add(arr,1);
-        for(int v : arr1) {
-            System.out.println(v);
-        }
 //        for(int v : arr) {
 //            System.out.println(v);
 //        }
+//        System.out.println();
+//        int[] arr1 = add(arr,1);
+//        for(int v : arr1) {
+//            System.out.println(v);
+//        }
+////        for(int v : arr) {
+////            System.out.println(v);
+////        }
+//        System.out.println();
+//        int[] arr2 = remove(arr1,3);
+//        for(int v : arr2) {
+//            System.out.println(v);
+//        }
         System.out.println();
-        int[] arr2 = remove(arr1,3);
-        for(int v : arr2) {
-            System.out.println(v);
-        }
+        buildMaxHeap(arr);
     }
 
 
-    public static void buildMaxHeap(int[] arr) {
+    public static void buildMinHead(int[] arr) {
         //任何一个二叉树的非叶子节点都是 arr.length/2  3 =》 3/2 => 1
         for (int i = arr.length/2; i>=0; i--) {
             downHeap(arr, i, arr.length-1);
         }
-        //java数组是引用传递
-     //   return  arr;
     }
 
-//    public static int[] buildMinHead(int[] arr) {
-//
-//    }
-//
+    public static void buildMaxHeap(int[] arr) {
+        for(int i = arr.length/2;i>=0;i--) {
+            downHeapMax(arr, i, arr.length - 1);
+            for(int v : arr) {
+                System.out.println(v);
+            }
+            System.out.println();
+        }
+
+    }
+
+    public static void downHeapMax(int[] arr, int parentIndex, int len) {
+        int temp = arr[parentIndex];
+        int childIndex = 2*parentIndex+1; //反之求
+
+        while (childIndex < len) {
+
+             if(childIndex + 1 < len && arr[childIndex+1] > arr[childIndex]) {
+                childIndex ++;
+            }
+            if(temp > arr[childIndex]) {
+                break;
+            }
+            System.out.println(parentIndex+" "+temp+" "+arr[childIndex]+" "+childIndex);
+            arr[parentIndex] = arr[childIndex];
+            parentIndex = childIndex;
+            childIndex = 2*parentIndex+1;
+        }
+        System.out.println("swap index"+parentIndex);
+        arr[parentIndex] = temp;
+        //return arr;
+    }
     //从上往下寻址
     public static void downHeap(int[] arr, int parentIndex, int len) {
         int temp = arr[parentIndex];
