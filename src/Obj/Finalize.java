@@ -1,6 +1,5 @@
 package Obj;
 
-import Annotations.Sys;
 
 public class Finalize {
 
