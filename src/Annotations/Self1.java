@@ -1,4 +1,5 @@
-package Self;
+package Annotations;
+
 
 
 @Test1(Annotation1 = "你好啊")

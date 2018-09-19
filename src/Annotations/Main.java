@@ -1,5 +1,4 @@
-import Self.NoMember;
-import Self.Test1;
+package Annotations;
 
 import java.lang.reflect.Method;
 

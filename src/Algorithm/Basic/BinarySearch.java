@@ -1,4 +1,4 @@
-package Learn1;
+package Algorithm.Basic;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package BagHeapStack;
+package Algorithm.BagHeapStack;
 
 
 import Std.StdIn;

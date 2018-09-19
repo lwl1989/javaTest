@@ -1,4 +1,4 @@
-package Self;
+package Algorithm.Linked;
 
 public class SinglyLinked {
     protected String value;

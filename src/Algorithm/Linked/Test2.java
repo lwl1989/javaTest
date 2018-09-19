@@ -1,4 +1,6 @@
-package Self;
+package Algorithm.Linked;
+
+import Algorithm.Linked.Linked;
 
 public class Test2 {
 
