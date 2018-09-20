@@ -1,4 +1,4 @@
-package Learn1;
+package Basic;
 
 import java.util.Date;
 import java.util.Properties;
