@@ -1,4 +1,4 @@
-package Algorithm.Heap;
+package Algorithm.Basic;
 
 /**
  * 堆排序
