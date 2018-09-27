@@ -132,7 +132,8 @@ outputStream中的三个基本的写方法
 在上面的继承关系图中可以看出：
 
 	Reader是所有的输入字符流的父类，它是一个抽象类。
-	CharReader、StringReader是两种基本的介质流，它们分别将Char数组、String中读取数据。	PipedReader是从与其它线程共用的管道中读取数据。
+	CharReader、StringReader是两种基本的介质流，它们分别将Char数组、String中读取数据。
+	PipedReader是从与其它线程共用的管道中读取数据。
 	BufferedReader很明显就是一个装饰器，它和其子类负责装饰其它Reader对象。
 	FilterReader是所有自定义具体装饰流的父类，其子类PushbackReader对Reader对象进行装饰，会增加一个行号。
 	InputStreamReader是一个连接字节流和字符流的桥梁，它将字节流转变为字符流。FileReader可以说是一个达到此功能、常用的工具类，在其源代码中明显使用了将FileInputStream转变为Reader的方法。我们可以从这个类中得到一定的技巧。Reader中各个类的用途和使用方法基本和InputStream中的类使用一致。后面会有Reader与InputStream的对应关系。
