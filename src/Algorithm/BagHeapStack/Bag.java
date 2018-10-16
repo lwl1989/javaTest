@@ -95,6 +95,10 @@ public class Bag<Item> implements Iterable<Item> {
         Bag<String> bag = new Bag<String>();
         while (!StdIn.isEmpty()) {
             String item = StdIn.readString();
+            if (item.equals("0")) {
+                break;
+            }
+
             bag.add(item);
         }
 
