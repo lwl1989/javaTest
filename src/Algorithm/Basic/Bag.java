@@ -1,11 +1,6 @@
-package Algorithm.BagHeapStack;
+package Algorithm.Basic;
 
 
-import Std.StdIn;
-import Std.StdOut;
-
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class Bag {
     public static void main(String[] args) {

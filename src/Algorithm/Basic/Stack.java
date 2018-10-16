@@ -1,4 +1,4 @@
-package Algorithm.BagHeapStack;
+package Algorithm.Basic;
 
 import java.util.ArrayList;
 

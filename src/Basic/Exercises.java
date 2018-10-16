@@ -1,4 +1,4 @@
-package Algorithm.Basic;
+package Basic;
 
 /**
  * 练习题
