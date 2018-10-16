@@ -7,105 +7,45 @@ import Std.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Bag<Item> implements Iterable<Item> {
-    private Node<Item> first;    // beginning of bag
-    private int n;               // number of elements in bag
-
-    // helper linked list class
-    private static class Node<Item> {
-        private Item item;
-        private Node<Item> next;
-    }
-
-    /**
-     * Initializes an empty bag.
-     */
-    public Bag() {
-        first = null;
-        n = 0;
-    }
-
-    /**
-     * Returns true if this bag is empty.
-     *
-     * @return {@code true} if this bag is empty;
-     *         {@code false} otherwise
-     */
-    public boolean isEmpty() {
-        return first == null;
-    }
-
-    /**
-     * Returns the number of items in this bag.
-     *
-     * @return the number of items in this bag
-     */
-    public int size() {
-        return n;
-    }
-
-    /**
-     * Adds the item to this bag.
-     *
-     * @param  item the item to add to this bag
-     */
-    public void add(Item item) {
-        Node<Item> oldfirst = first;
-        first = new Node<Item>();
-        first.item = item;
-        first.next = oldfirst;
-        n++;
-    }
-
-
-    /**
-     * Returns an iterator that iterates over the items in this bag in arbitrary order.
-     *
-     * @return an iterator that iterates over the items in this bag in arbitrary order
-     */
-    public Iterator<Item> iterator()  {
-        return new ListIterator<Item>(first);
-    }
-
-    // an iterator, doesn't implement remove() since it's optional
-    private class ListIterator<Item> implements Iterator<Item> {
-        private Node<Item> current;
-
-        public ListIterator(Node<Item> first) {
-            current = first;
-        }
-
-        public boolean hasNext()  { return current != null;                     }
-        public void remove()      { throw new UnsupportedOperationException();  }
-
-        public Item next() {
-            if (!hasNext()) throw new NoSuchElementException();
-            Item item = current.item;
-            current = current.next;
-            return item;
-        }
-    }
-
-    /**
-     * Unit tests the {@code Bag} data type.
-     *
-     * @param args the command-line arguments
-     */
+public class Bag {
     public static void main(String[] args) {
-        Bag<String> bag = new Bag<String>();
-        while (!StdIn.isEmpty()) {
-            String item = StdIn.readString();
-            if (item.equals("0")) {
-                break;
+        int[] v = {9,3,2,1,5,6};
+        int[] w = {3,5,1,7,9,2};
+
+        int cap = 20;
+
+        int[][] vw = new int[w.length][cap];
+
+        for(int i = 0; i < w.length; i++) {
+            for(int j=0;j < cap; j++) {
+                if(j<w[i]) {
+                    if(i == 0) {
+                        vw[i][j] = 0;
+                    }else{
+                        vw[i][j] = vw[i-1][j];
+                    }
+                }else{
+                    if(i == 0) {
+                        vw[i][j] = w[i];
+                    }else{
+                        //比较价值  假定取消上次装载，并且加上 本次装载物品的总价值，取其最大
+                        //前i-1个物品的最优解与第i个物品的价值之和更大
+                        if(vw[i-1][j]>vw[i-1][j-w[i]]+v[i]){
+                             vw[i][j]=vw[i-1][j];
+                        } else {
+                            vw[i][j]=vw[i-1][j-w[i]]+v[i];
+                        }
+                    }
+                }
             }
-
-            bag.add(item);
         }
 
-        StdOut.println("size of bag = " + bag.size());
-        for (String s : bag) {
-            StdOut.println(s);
+        for(int i = 0 ; i < vw.length; i ++) {
+            for (int j = 0; j < vw[i].length; j++) {
+                System.out.print(vw[i][j]+"\t");
+            }
+            System.out.println();
         }
+
     }
-
 }
