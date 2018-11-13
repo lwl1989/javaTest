@@ -3,35 +3,40 @@ package Thread;
 import java.util.Random;
 
 public class First{
-    protected int product = 10;
+    protected static int product = 10;
     int MIN_PRODUCT = 10;
     int MAX_PRODUCT = 100;
     public static void main(String[] args) {
         First first = new First();
-        Thread t1 = new ThreadRun(first);
-        Thread t2 = new ThreadRun(first);
-        t1.run();
-        t2.run();
+        Thread t1 = new ThreadRun(first, true);
+        Thread t2 = new ThreadRun(first, false);
+        t1.start();
+        t2.start();
     }
 
     static class ThreadRun extends Thread{
         First first;
-        ThreadRun(First first) {
+        boolean produce;
+        ThreadRun(First first, boolean produce) {
             this.first = first;
+            this.produce = produce;
         }
 
         @Override
         public void run() {
             super.run();
+            //System.out.println(this.produce);
             while (true) {
                 try {
-                    sleep(3000);
+                    sleep(1000);
                     int num =  (new Random()).nextInt();
-                    System.out.println(num);
-                    if(num%2==0) {
-                        this.first.produce();
-                    }else{
-                        this.first.comsume();
+                    //System.out.println(num);
+                    if(num%2==0){
+                        if (this.produce) {
+                            this.first.produce();
+                        } else {
+                            this.first.comsume();
+                        }
                     }
                 }catch (Exception e) {
                     e.printStackTrace();
@@ -46,7 +51,7 @@ public class First{
      */
     public synchronized void produce()
     {
-        if(this.product >= MAX_PRODUCT) {
+        if(First.product >= MAX_PRODUCT) {
             try{
                 wait();
                 System.out.println("产品已满,请稍候再生产");
@@ -55,8 +60,8 @@ public class First{
             }
             return;
         }
-        this.product ++;
-        System.out.println("生产者生产"+this.product+"个产品");
+        First.product ++;
+        System.out.println("生产者生产"+First.product+"个产品");
         notifyAll();
     }
 
@@ -65,7 +70,7 @@ public class First{
      */
     public synchronized void comsume()
     {
-        if(this.product < MIN_PRODUCT) {
+        if(First.product < MIN_PRODUCT) {
             try {
                 wait();
                 System.out.println("缺货");
@@ -74,8 +79,8 @@ public class First{
             }
             return;
         }
-        System.out.println("消费者取走了第"+this.product+"个产品");
-        this.product -- ;
+        System.out.println("消费者取走了第"+First.product+"个产品");
+        First.product -- ;
         notifyAll();
     }
 
