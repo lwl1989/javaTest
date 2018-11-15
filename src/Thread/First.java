@@ -3,7 +3,7 @@ package Thread;
 import java.util.Random;
 
 public class First{
-    protected static int product = 10;
+    protected  int product = 10;
     int MIN_PRODUCT = 10;
     int MAX_PRODUCT = 100;
     public static void main(String[] args) {
@@ -35,7 +35,7 @@ public class First{
                         if (this.produce) {
                             this.first.produce();
                         } else {
-                            this.first.comsume();
+                            this.first.consume();
                         }
                     }
                 }catch (Exception e) {
@@ -51,7 +51,7 @@ public class First{
      */
     public synchronized void produce()
     {
-        if(First.product >= MAX_PRODUCT) {
+        if(this.product >= MAX_PRODUCT) {
             try{
                 wait();
                 System.out.println("产品已满,请稍候再生产");
@@ -60,17 +60,17 @@ public class First{
             }
             return;
         }
-        First.product ++;
-        System.out.println("生产者生产"+First.product+"个产品");
+        this.product ++;
+        System.out.println("生产者生产"+this.product+"个产品");
         notifyAll();
     }
 
     /**
      * 消费者
      */
-    public synchronized void comsume()
+    public synchronized void consume()
     {
-        if(First.product < MIN_PRODUCT) {
+        if(this.product < MIN_PRODUCT) {
             try {
                 wait();
                 System.out.println("缺货");
@@ -79,8 +79,8 @@ public class First{
             }
             return;
         }
-        System.out.println("消费者取走了第"+First.product+"个产品");
-        First.product -- ;
+        System.out.println("消费者取走了第"+this.product+"个产品");
+        this.product -- ;
         notifyAll();
     }
 
