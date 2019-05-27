@@ -62,4 +62,100 @@
 
 ### 优先级和锁
 
-1. 在任意时刻，当有多个线程处于可运行状态时，运行系统总是挑选一个优先级最高的线程运行，只有当线程停止、退出或者某些原因不执行的时候，低优先级的线程才可能被执行
+#### 优先级
+
+java可以对线程设置优先级，示例如下：
+
+    threadObj.setPriority(int level)
+    
+   
+1. 在任意时刻，当有多个线程处于可运行状态时，运行系统总是挑选一个优先级最高的线程执行，只有当线程停止、退出或者由于某些原因不执行的时候，低优先级的线程才可能被执行
+
+2. 两个优先级相同的线程同时等待执行时，那么运行系统会以round-robin的方式选择一个线程执行（即轮询调度，以该算法所定的）（Java的优先级策略是抢占式调度！）
+
+3. 被选中的线程可因为一下原因退出，而给其他线程执行的机会：
+
+    一个更高优先级的线程处于可运行状态（Runnable）
+    线程主动退出（yield），或它的run方法结束
+    在支持分时方式的系统上，分配给该线程的时间片结束
+
+4. Java运行系统的线程调度算法是抢占式（preemptive）的，当更高优先级的线程出现并处于Runnable状态时，运行系统将选择高优先级的线程执行
+
+5. 例外地，当高优先级的线程处于阻塞状态且CPU处于空闲时，低优先级的线程也会被调度执行
+
+
+#### yield()和join()方法
+
+为什么这两方法单独拿出来学习呢，因为这两方法涉及的方面比较复杂。
+
+##### yield 
+
+理论上，yield意味着放手，放弃，投降。一个调用yield()方法的线程告诉虚拟机它乐意让其他线程占用自己的位置。
+这表明该线程没有在做一些紧急的事情。注意，这仅是一个暗示，并不能保证不会产生任何影响。
+
+源码中定义
+```
+/**
+  * A hint to the scheduler that the current thread is willing to yield its current use of a processor. The scheduler is free to ignore
+  * this hint. Yield is a heuristic attempt to improve relative progression between threads that would otherwise over-utilize a CPU.
+  * Its use should be combined with detailed profiling and benchmarking to ensure that it actually has the desired effect.
+  */
+```
+
+就是说，我用了yield也不一定会释放使用权，只是为了减轻线程间竞争而采取的优化措施。
+
+yield的几个关键点:
+
+- Yield是一个静态的原生(native)方法
+- Yield告诉当前正在执行的线程把运行机会交给线程池中拥有相同优先级的线程。
+- Yield不能保证使得当前正在运行的线程迅速转换到可运行的状态
+- 它仅能使一个线程从运行状态转到可运行状态，而不是等待或阻塞状态
+
+##### join
+
+> join() method suspends the execution of the calling thread until the object called finishes its execution.
+
+也就是说，t.join()方法阻塞调用此方法的线程(calling thread)，直到线程t完成，此线程再继续；通常用于在main()主线程内，等待其它线程完成再结束main()主线程。
+
+```
+    /**
+     *  Waits at most <code>millis</code> milliseconds for this thread to  
+     * die. A timeout of <code>0</code> means to wait forever.    
+     */
+    //此处A timeout of 0 means to wait forever 字面意思是永远等待，其实是等到t结束后。
+    public final synchronized void join(long millis)    throws InterruptedException {
+        long base = System.currentTimeMillis();
+        long now = 0;
+
+        if (millis < 0) {
+            throw new IllegalArgumentException("timeout value is negative");
+        }
+        
+        if (millis == 0) {
+            while (isAlive()) {
+                wait(0);
+            }
+        } else {
+            while (isAlive()) {
+                long delay = millis - now;
+                if (delay <= 0) {
+                    break;
+                }
+                wait(delay);
+                now = System.currentTimeMillis() - base;
+            }
+        }
+    }
+```
+
+可以看出，Join方法实现是通过wait（小提示：Object 提供的方法）。
+当main线程调用t.join时候，main线程会获得线程对象t的锁（wait 意味着拿到该对象的锁),调用该对象的wait(等待时间)，直到该对象唤醒main线程 ，比如退出后。
+这就意味着main 线程调用t.join时，必须能够拿到线程t对象的锁。
+
+#### 锁
+
+锁的具体讲解在我这两边学习笔记里
+
+[java锁学习（一）](https://my.oschina.net/lwl1989/blog/3049066)
+
+[java锁学习（二）](https://my.oschina.net/lwl1989/blog/3049584)

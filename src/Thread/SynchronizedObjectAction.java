@@ -59,6 +59,29 @@ public class SynchronizedObjectAction{
 
         }
         System.out.println("方法锁形式 默认就是this 线程执行完毕");
+
+
+        Thread t7 = new Thread(new SyncClassStatic());
+        Thread t8 = new Thread(new SyncClassStatic());
+        t7.start();
+        t8.start();
+
+        while (t7.isAlive() || t8.isAlive()) {
+
+        }
+        System.out.println("类锁，静态锁运行完毕");
+
+
+
+        Thread t9 = new Thread(new SyncClassObj());
+        Thread t10 = new Thread(new SyncClassObj());
+        t9.start();
+        t10.start();
+
+        while (t9.isAlive() || t10.isAlive()) {
+
+        }
+        System.out.println("类锁，class对象运行完毕");
     }
 
 
@@ -137,5 +160,59 @@ class SyncObjMethod implements Runnable {
         }
 
         System.out.println(Thread.currentThread().getName()+"运行结束");
+    }
+}
+
+
+//类锁
+//!!!! java类有很多对象 ，但是只有一个class对象 !!!!
+//所以，类锁，就是针对当前类的Class对象的锁
+//整个系统全局同步用类锁
+//局部锁用对象锁
+//对比下，则为  mysql 表锁和行锁一样  （锁的颗粒度，性能）
+//类锁同一时刻只能被一个对象获取
+//实现方式1  synchronized放在static方法上(静态锁)
+//实现方式2：synchronized放在class对象上
+
+//静态锁
+
+class SyncClassStatic implements Runnable {
+    @Override
+    public void run() {
+        method();
+    }
+
+    public static synchronized void method() {
+        System.out.println("我是类锁中静态锁");
+        try{
+            Thread.sleep(3000);
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(Thread.currentThread().getName()+"运行结束");
+    }
+}
+
+
+
+//class对象锁
+class SyncClassObj implements Runnable{
+    @Override
+    public void run() {
+        method();
+    }
+
+    private void method(){
+        synchronized (SyncClassObj.class) {
+            System.out.println("我是类锁中class对象锁");
+            try{
+                Thread.sleep(3000);
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println(Thread.currentThread().getName()+"运行结束");
+        }
     }
 }
